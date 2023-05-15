@@ -17,6 +17,20 @@ class Database:
     def count(self, query: dict = None) -> int:
         return self.collection.count_documents(query or {})
     
+    def count_by_company(self) -> dict:
+        pipeline = [
+            {"$group": {"_id": "$company", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}}
+        ]
+        return {doc["_id"]: doc["count"] for doc in self.collection.aggregate(pipeline)}
+    
+    def count_by_job_title(self) -> dict:
+        pipeline = [
+            {"$group": {"_id": "$job_title", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}}
+        ]
+        return {doc["_id"]: doc["count"] for doc in self.collection.aggregate(pipeline)}
+    
     def search(self, search: str, projection: dict = None) -> list[dict]:
         if projection is None:
             projection = self.default_projection
