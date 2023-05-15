@@ -1,53 +1,53 @@
 """ Data Validation Schema """
 from typing import Optional
 
-from pydantic import BaseModel, Extra, constr, conint, confloat, EmailStr
+from pydantic import BaseModel, Extra, constr, EmailStr
 
 
-class User(BaseModel):
+class Outreach(BaseModel):
     name: constr(min_length=3, max_length=128)
-    age: conint(ge=1, le=120)
     email: EmailStr
-    active: Optional[bool]
-    score: confloat(ge=0, le=1)
+    company: constr(min_length=1, max_length=128)
+    job_title: constr(min_length=1, max_length=128)
+    job_description: constr(min_length=1, max_length=1024)
+    key_points_from_resume: constr(min_length=1, max_length=2048)
+    outreach: constr(min_length=1, max_length=4096)
+    contacts: Optional[constr(max_length=1024)]
 
     class Config:
         extra = Extra.forbid
 
-
-class UserQuery(BaseModel):
+class OutreachQuery(BaseModel):
     name: Optional[constr(max_length=128)]
-    age: Optional[conint(ge=1, le=120)]
     email: Optional[EmailStr]
-    active: Optional[bool]
-    score: Optional[confloat(ge=0, le=1)]
+    company: Optional[constr(max_length=128)]
+    job_title: Optional[constr(max_length=128)]
+    job_description: Optional[constr(max_length=1024)]
+    key_points_from_resume: Optional[constr(max_length=2048)]
+    outreach: Optional[constr(max_length=4096)]
+    contacts: Optional[constr(max_length=1024)]
 
     class Config:
         extra = Extra.forbid
 
-
-class UserUpdate(BaseModel):
-    name: Optional[constr(max_length=128)]
-    age: Optional[conint(ge=1, le=120)]
-    email: Optional[EmailStr]
-    active: Optional[bool]
-    score: Optional[confloat(ge=0, le=1)]
-
-    class Config:
-        extra = Extra.forbid
-
-
-default_user = User(
-    name="John Smith",
-    age=42,
-    email="john.smith@gmail.com",
-    active=False,
-    score=0.5,
+default_outreach = Outreach(
+    name="John Doe",
+    email="john.doe@gmail.com",
+    company="B.A. Consulting",
+    job_title="Software Engineer",
+    job_description="Experience with Python, Java, C++, and C#.",
+    key_points_from_resume="Built a web scraper in Python.",
+    outreach="To whom it may concern,\n\nI am interested in the Software Engineer position at B.A. Consulting. I have experience with Python, Java, C++, and C#. I built a web scraper in Python./n/nSincerely,\n\nJohn Doe",
+    contacts=None
 )
-default_query = UserQuery(
-    email="john.smith@gmail.com",
-)
-default_update = UserUpdate(
-    active=True,
-    score=0.125,
+
+default_outreach_query = OutreachQuery(
+    name="John Doe",
+    email="john.doe@gmail.com",
+    company="B.A. Consulting",
+    job_title="Software Engineer",
+    job_description="Experience with Python, Java, C++, and C#.",
+    key_points_from_resume="Built a web scraper in Python.",
+    outreach="To whom it may concern,\n\nI am interested in the Software Engineer position at B.A. Consulting. I have experience with Python, Java, C++, and C#. I built a web scraper in Python./n/nSincerely,\n\nJohn Doe",
+    contacts=None
 )
