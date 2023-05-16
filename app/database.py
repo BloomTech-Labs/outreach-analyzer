@@ -31,6 +31,13 @@ class Database:
         ]
         return {doc["_id"]: doc["count"] for doc in self.collection.aggregate(pipeline)}
     
+    def count_by_name(self) -> dict:
+        pipeline = [
+            {"$group": {"_id": "$name", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}}
+        ]
+        return {doc["_id"]: doc["count"] for doc in self.collection.aggregate(pipeline)}
+    
     def search(self, search: str, projection: dict = None) -> list[dict]:
         if projection is None:
             projection = self.default_projection

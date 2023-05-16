@@ -53,3 +53,9 @@ async def total_by_job_title():
     """ Returns total number of outreach by job title
     @return: Dict """
     return db.count_by_job_title()
+
+@API.get("/total-by-name", tags=["Outreach"])
+async def total_by_name():
+    """ Returns total number of outreach by name
+    @return: Dict """
+    return db.count_by_name()
