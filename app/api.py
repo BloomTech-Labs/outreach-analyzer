@@ -13,10 +13,10 @@ API = FastAPI(
 
 API.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=['https://zapier.com', 'https://zapier.com/'],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=['*'],
+    allow_headers=['*'],
 )
 
 db = Database("Outreach")
