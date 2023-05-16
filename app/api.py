@@ -58,4 +58,4 @@ async def total_by_job_title():
 async def total_by_name():
     """ Returns total number of outreach by name
     @return: Dict """
-    return {"data": db.count_by_name()}
+    return {"data": [db.count_by_name()]}
