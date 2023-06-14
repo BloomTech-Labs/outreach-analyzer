@@ -24,7 +24,7 @@ class Database:
             {"$sort": {"count": -1}}
         ]
         return {
-            doc["_id"]: doc["count"] for doc in self.collection.aggregate(pipeline)
+            f"{doc['_id']}: {doc['count']}" for doc in self.collection.aggregate(pipeline)
         }
 
     def count_by_field_previous_week(self, field: str):
@@ -37,9 +37,9 @@ class Database:
             {"$group": {"_id": f"${field}", "count": {"$sum": 1}}},
             {"$sort": {"count": -1, "_id": -1}}
         ]
-        return {
-            doc["_id"]: doc["count"] for doc in self.collection.aggregate(pipeline)
-        }
+        return "<br>".join(
+            f'{doc["_id"].strip()}: {doc["count"]}' for doc in self.collection.aggregate(pipeline)
+        )
 
     def search(self, search: str, projection: dict = None) -> list[dict]:
         if projection is None:
