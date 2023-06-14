@@ -17,18 +17,20 @@ class Outreach(BaseModel):
     class Config:
         extra = Extra.forbid
 
-class OutreachQuery(BaseModel):
-    name: Optional[constr(max_length=128)]
-    email: Optional[EmailStr]
-    company: Optional[constr(max_length=128)]
-    job_title: Optional[constr(max_length=128)]
-    job_description: Optional[constr(max_length=1024)]
-    key_points_from_resume: Optional[constr(max_length=2048)]
-    outreach: Optional[constr(max_length=4096)]
-    contacts: Optional[constr(max_length=1024)]
 
-    class Config:
-        extra = Extra.forbid
+# class OutreachQuery(BaseModel):
+#     name: Optional[constr(max_length=128)]
+#     email: Optional[EmailStr]
+#     company: Optional[constr(max_length=128)]
+#     job_title: Optional[constr(max_length=128)]
+#     job_description: Optional[constr(max_length=1024)]
+#     key_points_from_resume: Optional[constr(max_length=2048)]
+#     outreach: Optional[constr(max_length=4096)]
+#     contacts: Optional[constr(max_length=1024)]
+#
+#     class Config:
+#         extra = Extra.forbid
+
 
 default_outreach = Outreach(
     name="John Doe",

@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from os import getenv
 from typing import Iterable
 import certifi
@@ -16,28 +17,30 @@ class Database:
 
     def count(self, query: dict = None) -> int:
         return self.collection.count_documents(query or {})
-    
-    def count_by_company(self) -> dict:
+
+    def count_by_field(self, field: str) -> dict:
         pipeline = [
-            {"$group": {"_id": "$company", "count": {"$sum": 1}}},
+            {"$group": {"_id": f"${field}", "count": {"$sum": 1}}},
             {"$sort": {"count": -1}}
         ]
-        return {doc["_id"]: doc["count"] for doc in self.collection.aggregate(pipeline)}
-    
-    def count_by_job_title(self) -> dict:
+        return {
+            doc["_id"]: doc["count"] for doc in self.collection.aggregate(pipeline)
+        }
+
+    def count_by_field_previous_week(self, field: str):
+        today = datetime.today()
+        previous_week = today - timedelta(days=7)
         pipeline = [
-            {"$group": {"_id": "$job_title", "count": {"$sum": 1}}},
-            {"$sort": {"count": -1}}
+            {"$match":
+                 {"timestamp":
+                      {"$lt": today.isoformat(), "$gte": previous_week.isoformat()}}},
+            {"$group": {"_id": f"${field}", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1, "_id": -1}}
         ]
-        return {doc["_id"]: doc["count"] for doc in self.collection.aggregate(pipeline)}
-    
-    def count_by_name(self) -> dict:
-        pipeline = [
-            {"$group": {"_id": "$name", "count": {"$sum": 1}}},
-            {"$sort": {"count": -1}}
-        ]
-        return {doc["_id"]: doc["count"] for doc in self.collection.aggregate(pipeline)}
-    
+        return {
+            doc["_id"]: doc["count"] for doc in self.collection.aggregate(pipeline)
+        }
+
     def search(self, search: str, projection: dict = None) -> list[dict]:
         if projection is None:
             projection = self.default_projection
@@ -77,8 +80,3 @@ class Database:
 
     def drop_index(self):
         self.collection.drop_indexes()
-
-
-if __name__ == '__main__':
-    db = Database("Outreach")
-    db.reset_collection()
